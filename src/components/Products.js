@@ -4,6 +4,40 @@ import {addProduct} from '../features/cartSlice'
 import {loadProducts} from '../features/productsSlice'
 import {Price} from '../utils'
 
+import styled from 'styled-components'
+const ProductsList = styled.div`
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+grid-gap: 1em;
+max-width: 1000px;
+margin: auto;
+}`
+
+const SingleProduct = styled.div`
+display:flex;
+flex-wrap: wrap;
+gap: .5em;
+justify-content: space-between;
+align-items: center;
+padding: 1em;
+box-shadow: 0 0 4px 1px rgba(0,0,0,.2);
+&:hover {
+box-shadow: 0 0 4px 1px rgba(0,0,0,.6);
+}
+img {
+flex-basis: 100%;
+height: 200px;
+object-fit: cover;
+}
+`
+const Title = styled.p`
+font-weight: bold;
+height: 2em;
+line-height: 1.0;
+font-size: 1.3em;
+margin: 0 0 .5em;
+text-transform: uppercase;
+}`
 export default function Products() {
   const dispatch = useDispatch()
   const products = useSelector(state => state.products.products)
@@ -11,10 +45,10 @@ export default function Products() {
 
   useEffect(() => {
     dispatch(loadProducts())
-  },[])
+  },[dispatch])
 
   if (!ready) return <div className="product">loading products...</div>
-  return <div className="products">{products.map(product => <Product key={product.sku} product={product} />)}</div>
+  return <ProductsList>{products.map(product => <Product key={product.sku} product={product} />)}</ProductsList>
 }
 
 export function Product({product}) {
@@ -26,12 +60,12 @@ export function Product({product}) {
     quantity: 1
   }))
 
-  return <div className="product">
-  <p className="title">{product.name}</p>
+  return <SingleProduct>
+  <Title>{product.name}</Title>
   <img src={product.image} alt={product.name} />
   <span className="description">{product.description}</span>
   <Price price={product.price}/>
-  <button onClick={handleAddProduct}>add</button>
-</div>
+  <button onClick={handleAddProduct}>add to cart</button>
+</SingleProduct>
 }
 

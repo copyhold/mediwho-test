@@ -1,11 +1,9 @@
 import React from 'react'
 import {useSelector,useDispatch} from 'react-redux'
-import {removeProduct} from '../features/cartSlice'
+import {removeProduct,cartTotal} from '../features/cartSlice'
 import {Price} from '../utils'
 
 export default function Cart() {
-  const dispatch = useDispatch()
-  const handleRemove = sku => dispatch(removeProduct(sku))
   const cart_items = useSelector(state => state.cart.cart_items)
   return <div className="cart">
   <header></header>
@@ -14,14 +12,16 @@ export default function Cart() {
 </div>
 }
 export function CartItem({item}) {
-  console.log(item)
+  const dispatch = useDispatch()
+  const handleRemove = () => dispatch(removeProduct(item.productsku))
   return <li>
   <span className="title">{item.product.name}</span>
   <span className="quantity">{item.quantity}</span>
   <Price price={item.quantity * item.product.price} />
+  <button onClick={handleRemove}>&times;</button>
 </li>
 }
 export function Totals() {
-  const total = useSelector(state => state.cart.cartTotal)
+  const total = useSelector(cartTotal)
   return <Price price={total} />
 }
