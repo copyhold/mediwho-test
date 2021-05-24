@@ -36,7 +36,7 @@ export const cartSlice = createSlice({
       }
     },
     removeProduct: (state, action) => {
-      state.cart_items.delete(action.sku)
+      delete(state.cart_items[action.payload])
     }
   }
 })
